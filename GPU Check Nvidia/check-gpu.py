@@ -17,4 +17,4 @@ blocks_per_grid = (n + threads_per_block - 1) // threads_per_block
 multiply_by_two[blocks_per_grid, threads_per_block](d_a)
 result = d_a.copy_to_host()
 
-print(result[:10])  # Debería mostrar [0. 2. 4. 6. 8. 10. ...]
+print(result[:10])  # Should display [0. 2. 4. 6. 8. 10. ...]

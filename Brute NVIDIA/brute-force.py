@@ -4,20 +4,19 @@ import time
 import numpy as np
 from numba import cuda
 
-# Definir el conjunto de caracteres (puedes modificarlo)
-charset = string.ascii_lowercase + string.digits  # a-z, 0-9
-max_length = 6  # Longitud máxima de la contraseña
+# Define the character set (you can modify it)
+charset = string.ascii_lowercase + string.digits + string.punctuation  # a-z, 0-9, special characters
+max_length = 6  # Maximum password length
 
-# Kernel de CUDA para fuerza bruta
+# CUDA kernel for brute-force attack
 @cuda.jit
 def gpu_brute_force(password, charset, result, max_length, num_combinations):
     idx = cuda.grid(1)
     if idx < num_combinations:
-        # Generar combinación basada en el índice
         temp_idx = idx
         match = True
         
-        # Verificar cada carácter de la contraseña
+        # Check each character of the password
         for i in range(max_length):
             if i < len(password):
                 char_idx = temp_idx % len(charset)
@@ -26,47 +25,47 @@ def gpu_brute_force(password, charset, result, max_length, num_combinations):
                     break
                 temp_idx = temp_idx // len(charset)
         
-        # Si todos los caracteres coinciden
+        # If all characters match
         if match:
-            result[0] = 1  # Se encontró la contraseña
+            result[0] = 1  # Password found
 
-# Función para ejecutar la fuerza bruta en la GPU
+# Function to run brute-force on the GPU
 def run_gpu_brute_force(password, charset, max_length):
-    num_combinations = len(charset) ** max_length  # Total de combinaciones posibles
-    result = np.zeros(1, dtype=np.int32)  # Variable para almacenar el resultado
+    num_combinations = len(charset) ** max_length  # Total number of possible combinations
+    result = np.zeros(1, dtype=np.int32)  # Variable to store the result
 
-    # Convertir charset y password a arrays numpy
+    # Convert charset and password to numpy arrays
     charset_array = np.array([ord(c) for c in charset], dtype=np.uint8)
     password_array = np.array([ord(c) for c in password], dtype=np.uint8)
     
-    # Transferir datos a la GPU
+    # Transfer data to the GPU
     d_charset = cuda.to_device(charset_array)
     d_result = cuda.to_device(result)
     d_password = cuda.to_device(password_array)
 
-    # Configurar la cantidad de bloques y hilos
+    # Configure the number of blocks and threads
     threads_per_block = 128
     blocks = (num_combinations + (threads_per_block - 1)) // threads_per_block
 
-    # Llamar al kernel
+    # Launch the kernel
     gpu_brute_force[blocks, threads_per_block](d_password, d_charset, d_result, max_length, num_combinations)
 
-    # Transferir el resultado de vuelta a la CPU
+    # Copy result back to the CPU
     d_result.copy_to_host(result)
     
-    # Mostrar el resultado
+    # Display the result
     if result[0] == 1:
-        print(f"¡Contraseña encontrada: {password}")
+        print(f"Password found: {password}")
     else:
-        print("Contraseña no encontrada")
+        print("Password not found")
 
-# Definir la contraseña a encontrar
-password = 'me3j8ss'
+# Define the password to be found
+password = 'me3j-s'
 
-# Ejecutar fuerza bruta en la GPU
+# Run brute-force on the GPU
 start_time = time.time()
 run_gpu_brute_force(password, charset, max_length)
 end_time = time.time()
 
-# Mostrar tiempo de ejecución
-print(f"Tiempo de ejecución: {end_time - start_time:.2f} segundos")
+# Display execution time
+print(f"Execution time: {end_time - start_time:.2f} seconds")

@@ -30,9 +30,9 @@ def brute_force_crack(password, charset, max_length):
     return None
 
 if __name__ == "__main__":
-    password = "aaa"  # Password to test
-    charset = string.ascii_lowercase + string.digits
-    max_length = 3
+    password = "me3j-s"  # Password to test
+    charset = string.ascii_lowercase + string.digits + string.punctuation
+    max_length = 6
 
     print(f"Cracking password: {password}")
     result = brute_force_crack(password, charset, max_length)

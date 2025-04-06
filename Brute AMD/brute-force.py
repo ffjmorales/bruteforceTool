@@ -125,7 +125,7 @@ def execute_kernel(password, charset, max_length):
 
 # Main Function
 def main():
-    password = 'Boro2:'  # Password for Test (must be lowercase letters and digits)
+    password = 'me3j-s'  # Password for Test (must be lowercase letters and digits)
     print(f"Searching for password: {password}")
     print(f"Charset size: {len(charset)}")
     print(f"Total combinations: {len(charset)**max_length:,}")
