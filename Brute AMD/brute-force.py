@@ -9,8 +9,8 @@ os.environ['PYOPENCL_CTX'] = '0'  # Automatically selects AMD GPU
 os.environ['PYOPENCL_COMPILER_OUTPUT'] = '1'  # Sample compiler output
 
 # Define the character set
-charset = string.ascii_lowercase + string.digits  + string.punctuation  # a-z, 0-9, and special characters
-max_length = 6  # Maximum password length
+charset = string.ascii_letters + string.digits  + string.punctuation  # a-z, 0-9, and special characters
+max_length = 5  # Maximum password length
 
 # Initialize OpenCL for AMD
 def init_opencl():
@@ -125,7 +125,7 @@ def execute_kernel(password, charset, max_length):
 
 # Main Function
 def main():
-    password = 'me3j-s'  # Password for Test (must be lowercase letters and digits)
+    password = 'Hello'  # Password for Test (must be lowercase letters and digits)
     print(f"Searching for password: {password}")
     print(f"Charset size: {len(charset)}")
     print(f"Total combinations: {len(charset)**max_length:,}")

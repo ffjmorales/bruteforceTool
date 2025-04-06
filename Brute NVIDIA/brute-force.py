@@ -5,7 +5,7 @@ import numpy as np
 from numba import cuda
 
 # Define the character set (you can modify it)
-charset = string.ascii_lowercase + string.digits + string.punctuation  # a-z, 0-9, special characters
+charset = string.ascii_letters + string.digits + string.punctuation  # a-z, 0-9, special characters
 max_length = 6  # Maximum password length
 
 # CUDA kernel for brute-force attack
